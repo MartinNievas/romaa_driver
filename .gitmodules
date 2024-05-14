@@ -1,0 +1,3 @@
+[submodule "include/romaa_comm"]
+	path = include/romaa_comm
+	url = git@github.com:MartinNievas/romaa_comm.git
