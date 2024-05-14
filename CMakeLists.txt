@@ -7,9 +7,46 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+
+set(dependencies
+    rclcpp
+    nav_msgs
+    geometry_msgs
+    std_srvs
+    tf2
+    tf2_ros
+    tf2_geometry_msgs
+)
+
+include_directories(include)
+
+add_executable(romaa_driver
+    src/romaa_driver_main.cpp
+    src/romaa_driver/RomaaDriverNode.cpp
+)
+
+add_library(romaa_comm SHARED IMPORTED)
+set_target_properties(romaa_comm
+    PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/include/romaa_comm/build/libromaa_comm.so)
+ament_target_dependencies(romaa_driver ${dependencies})
+target_link_libraries(romaa_driver romaa_comm)
+
+install(TARGETS
+    romaa_driver
+    DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+    launch
+    DESTINATION share/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
